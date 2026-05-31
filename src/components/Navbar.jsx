@@ -17,7 +17,7 @@ const Navbar = () => {
         </span>
       </div>
 
-      <ul className="hidden md:flex items-center gap-14 text-[#d9d9d9] font-medium text-base tracking-wide">
+      <ul className="hidden md:flex items-center gap-14 text-[#d9d9d9] font-medium text-[14px] tracking-wide">
         <li className="cursor-pointer hover:text-[#F99B0C] hover:drop-shadow-[0_0_8px_rgba(249,155,12,0.6)] transition-all duration-200">Home</li>
         <li className="cursor-pointer hover:text-[#F99B0C] hover:drop-shadow-[0_0_8px_rgba(249,155,12,0.6)] transition-all duration-200">About</li>
         <li className="cursor-pointer hover:text-[#F99B0C] hover:drop-shadow-[0_0_8px_rgba(249,155,12,0.6)] transition-all duration-200">Why Us</li>
