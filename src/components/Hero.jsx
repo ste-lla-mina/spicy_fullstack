@@ -15,7 +15,7 @@ const Hero = () => {
             One Spot
           </div>
 
-          <h1 className="text-[#F99B0C] font-serif text-2xl md:text-[20px] font-bold tracking-wide leading-[1.15]">
+          <h1 className="text-[#F99B0C] font-sans text-2xl md:text-[20px] font-bold tracking-wide leading-[1.15]">
             All You Need To Dine Smarter.
           </h1>
 
