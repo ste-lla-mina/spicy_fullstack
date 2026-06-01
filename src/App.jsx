@@ -1,21 +1,14 @@
 import React from 'react';
 import Navbar from './components/Navbar'; 
 import Hero from './components/Hero';
-import bgImage from './assets/backg.png';    
+import About from './components/About';
 
 function App() {
   return (
-    <div 
-      className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat overflow-x-hidden"
-      style={{ backgroundImage: `url(${bgImage})` }}
-    >
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      <div className="relative z-10">
-        <Navbar />
-        <div className="pt-10 px-12">
-          <Hero/>
-        </div>
-      </div>
+    <div className="w-full min-h-screen bg-[#1e1e1e] text-white overflow-x-hidden">
+      <Navbar />
+      <Hero />
+      <About />
     </div>
   );
 }
