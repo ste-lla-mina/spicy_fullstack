@@ -1,17 +1,21 @@
 import React from 'react';
+import backgImage from '../assets/backg.png';
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen w-full flex items-center px-20 pt-24 pb-12 overflow-hidden">
-      
+    <div 
+      className="relative min-h-screen w-full flex items-center px-20 pt-16 pb-20 bg-cover bg-center bg-no-repeat overflow-hidden"
+      style={{ backgroundImage: `url(${backgImage})` }}
+    >
+      <div className="absolute inset-0 bg-black/45 pointer-events-none" />
+
       <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10">
-        
         <div className="lg:col-span-6 flex flex-col items-start space-y-7 pl-4">
           <div className="bg-[#F99B0C] text-white font-bold text-xs tracking-wider uppercase px-4 py-2 rounded-sm shadow-[0_4px_12px_rgba(249,155,12,0.25)]">
             One Spot
           </div>
 
-          <h1 className="text-[#F99B0C] font-sans  text-2xl md:text-[20px] font-bold tracking-wide leading-[1.15]">
+          <h1 className="text-[#F99B0C] font-serif text-2xl md:text-[20px] font-bold tracking-wide leading-[1.15]">
             All You Need To Dine Smarter.
           </h1>
 
@@ -35,7 +39,7 @@ const Hero = () => {
         </div>
 
         <div className="lg:col-span-6 relative w-full h-[600px] flex items-center justify-end pr-4">
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[380px] h-[380px] rounded-full border border-white/10 overflow-hidden shadow-[0_15px_50px_rgba(0,0,0,0.8)] z-20">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full border border-white/10 overflow-hidden shadow-[0_15px_50px_rgba(0,0,0,0.8)] z-20">
             <img 
               src="/src/assets/burger.jpg" 
               alt="Delicious Burger" 
@@ -43,7 +47,7 @@ const Hero = () => {
             />
           </div>
 
-          <div className="absolute right-[10px] top-[80px] w-[110px] h-[110px] rounded-full border border-white/10 overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.6)] z-30">
+          <div className="absolute right-[10px] top-[100px] w-[100px] h-[100px] rounded-full border border-white/10 overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.6)] z-30">
             <img 
               src="/src/assets/sala.jpg" 
               alt="Healthy Bowl" 
@@ -51,7 +55,7 @@ const Hero = () => {
             />
           </div>
 
-          <div className="absolute right-[260px] bottom-[90px] w-[125px] h-[125px] rounded-full border border-white/10 overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.6)] z-30">
+          <div className="absolute right-[240px] bottom-[100px] w-[110px] h-[110px] rounded-full border border-white/10 overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.6)] z-30">
             <img 
               src="/src/assets/sa.jpg" 
               alt="Fresh Salad" 
@@ -59,10 +63,9 @@ const Hero = () => {
             />
           </div>
         </div>
-
       </div>
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-10 z-20 bg-black/10 backdrop-blur-sm px-8 py-3 rounded-full border border-white/5 shadow-xl">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-10 z-20 bg-black/10 backdrop-blur-sm px-8 py-3 rounded-full border border-white/5 shadow-xl">
         <div className="flex items-center gap-2.5">
           <div className="w-12 h-12 rounded-full border border-white/20 overflow-hidden shadow-md hover:scale-105 transition-transform duration-200">
             <img src="/src/assets/pasta.jpg" alt="Pasta" className="w-full h-full object-cover" />
