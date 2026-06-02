@@ -71,13 +71,13 @@ const SignUp = () => {
             <button
               type="button"
               onClick={() => setRole('owner')}
-              className={`flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold tracking-wide transition-all ${
+              className={`flex items-center justify-center gap-2 py-1 rounded-lg text-sm font-bold tracking-wide transition-all ${
                 role === 'owner'
                   ? 'bg-[#F99B0C] text-white shadow-lg'
                   : 'text-gray-400 hover:text-white bg-transparent'
               }`}
             >
-              <Store size={16} /> Restaurant Owner
+              <Store size={16} /> Owner
             </button>
           </div>
 
