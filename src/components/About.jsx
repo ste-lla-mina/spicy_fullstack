@@ -5,7 +5,7 @@ import fryingBg from '../assets/frying.jpg';
 
 const About = () => {
   return (
-    <div className="w-full text-white select-none bg-[#1e1e1e]">
+    <div id="about" className="w-full text-white select-none bg-[#1e1e1e]">
       <div 
         className="relative w-full h-[550px] flex items-center px-20 bg-cover bg-center bg-no-repeat overflow-hidden"
         style={{ backgroundImage: `url(${fryingBg})` }}
