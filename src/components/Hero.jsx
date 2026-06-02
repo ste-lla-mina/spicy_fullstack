@@ -4,7 +4,7 @@ import backgImage from '../assets/backg.png';
 const Hero = ({ onNavigate }) => {
   return (
     <div 
-      className="relative min-h-screen w-full flex items-center px-20 pt-16 pb-20 bg-cover bg-center bg-no-repeat overflow-hidden"
+     id="home" className="relative min-h-screen w-full flex items-center px-20 pt-16 pb-20 bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{ backgroundImage: `url(${backgImage})` }}
     >
       <div className="absolute inset-0 bg-black/45 pointer-events-none" />
@@ -36,7 +36,7 @@ const Hero = ({ onNavigate }) => {
               Register.
             </button>
             <button 
-              onClick={() => onNavigate('signup')}
+              onClick={() => onNavigate('login')}
               className="bg-transparent hover:bg-white/5 text-white font-semibold px-9 py-3 rounded-full border border-white/30 backdrop-blur-sm transition-all duration-200 active:scale-95 text-sm tracking-wide"
             >
               Sign In.
