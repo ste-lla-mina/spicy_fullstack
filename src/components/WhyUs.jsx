@@ -56,7 +56,7 @@ const WhyUs = () => {
 
   return (
     <div 
-      className="relative w-full py-24 px-20 flex items-center justify-center bg-cover bg-center bg-no-repeat border-t border-white/5 select-none overflow-hidden"
+     id="why-us" className="relative w-full py-24 px-20 flex items-center justify-center bg-cover bg-center bg-no-repeat border-t border-white/5 select-none overflow-hidden"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div className="absolute inset-0  pointer-events-none" />
