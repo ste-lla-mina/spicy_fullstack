@@ -1,7 +1,7 @@
 import React from 'react';
 import backgImage from '../assets/backg.png';
 
-const Hero = () => {
+const Hero = ({ onNavigate }) => {
   return (
     <div 
       className="relative min-h-screen w-full flex items-center px-20 pt-16 pb-20 bg-cover bg-center bg-no-repeat overflow-hidden"
@@ -29,10 +29,16 @@ const Hero = () => {
           </div>
 
           <div className="flex items-center gap-4 pt-2">
-            <button className="bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold px-9 py-3 rounded-full shadow-[0_6px_20px_rgba(249,155,12,0.35)] transition-all duration-200 active:scale-95 text-sm tracking-wide">
+            <button 
+              onClick={() => onNavigate('signup')}
+              className="bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold px-9 py-3 rounded-full shadow-[0_6px_20px_rgba(249,155,12,0.35)] transition-all duration-200 active:scale-95 text-sm tracking-wide"
+            >
               Register.
             </button>
-            <button className="bg-transparent hover:bg-white/5 text-white font-semibold px-9 py-3 rounded-full border border-white/30 backdrop-blur-sm transition-all duration-200 active:scale-95 text-sm tracking-wide">
+            <button 
+              onClick={() => onNavigate('signup')}
+              className="bg-transparent hover:bg-white/5 text-white font-semibold px-9 py-3 rounded-full border border-white/30 backdrop-blur-sm transition-all duration-200 active:scale-95 text-sm tracking-wide"
+            >
               Sign In.
             </button>
           </div>
