@@ -4,7 +4,7 @@ import signBg from '../assets/sign.png';
 import logoImg from '../assets/logo.png';
 import Owner from './Owner';
 
-const SignUp = () => {
+const SignUp = ({onNavigate}) => {
   const [role, setRole] = useState('client'); 
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -150,6 +150,18 @@ const SignUp = () => {
               Sign Up.
             </button>
           </form>
+             <div className="text-center pt-2">
+            <p className="text-xs text-gray-400">
+              Already have account?{' '}
+              <button 
+          type="button"
+          onClick={() => onNavigate('login')} 
+          className="text-[#F99B0C] hover:underline font-semibold bg-transparent border-none cursor-pointer p-0 align-baseline"
+        >
+          Login
+        </button>
+            </p>
+          </div>
         </div>
 
       </div>
