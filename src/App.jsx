@@ -5,12 +5,17 @@ import About from './components/About';
 import WhyUs from './components/WhyUs';
 import Footer from './components/Footer';
 import SignUp from './components/SignUp';
+import Login from './components/Login';
 
 function App() {
   const [view, setView] = useState('landing'); 
 
   if (view === 'signup') {
-    return <SignUp />;
+    return <SignUp onNavigate={setView} />;
+  }
+
+  if (view === 'login') {
+    return <Login onNavigate={setView} />;
   }
 
   return (
