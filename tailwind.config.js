@@ -8,6 +8,9 @@ module.exports = {
       colors: {
         brand: '#f99b0c',
       },
+       fontFamily: {
+        nightshade: ["'Jim Nightshade'", "cursive"],
+      },
     },
   },
   plugins: [],

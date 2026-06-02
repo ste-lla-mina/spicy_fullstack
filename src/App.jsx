@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar'; 
-import Hero from './components/Hero';
-import About from './components/About';
-import WhyUs from './components/WhyUs';
-import Footer from './components/Footer';
-import SignUp from './components/SignUp';
-import Login from './components/Login';
+import Navbar from './components/Landing/Navbar'; 
+import Hero from './components/Landing/Hero';
+import About from './components/Landing/About';
+import WhyUs from './components/Landing/WhyUs';
+import Footer from './components/Landing/Footer';
+import SignUp from './components/Landing/SignUp';
+import Login from './components/Landing/Login';
 
 function App() {
   const [view, setView] = useState('landing'); 

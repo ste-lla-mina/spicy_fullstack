@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import bgImage from '../assets/bg.png';
+import bgImage from '../../assets/bg.png';
 
 const TESTIMONIALS = [
   {

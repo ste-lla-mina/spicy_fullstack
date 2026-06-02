@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Store } from 'lucide-react';
-import signBg from '../assets/sign.png'; 
-import logoImg from '../assets/logo.png';
+import signBg from '../../assets/sign.png'; 
+import logoImg from '../../assets/logo.png';
 
 const Login = ({onNavigate}) => {
   const [role, setRole] = useState('client'); 

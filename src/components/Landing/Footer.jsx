@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin, Mail, Phone } from 'lucide-react';
-import fryingBg from '../assets/frying.jpg';
+import fryingBg from '../../assets/frying.jpg';
 
 const Footer = () => {
   const handleSubscribe = (e) => {

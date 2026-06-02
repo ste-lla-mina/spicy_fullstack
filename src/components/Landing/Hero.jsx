@@ -1,5 +1,5 @@
 import React from 'react';
-import backgImage from '../assets/backg.png';
+import backgImage from '../../assets/backg.png';
 
 const Hero = ({ onNavigate }) => {
   return (

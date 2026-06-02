@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserPlus, UtensilsCrossed, ClipboardCheck } from 'lucide-react';
-import bgImage from '../assets/bg.png';
-import fryingBg from '../assets/frying.jpg';
+import bgImage from '../../assets/bg.png';
+import fryingBg from '../../assets/frying.jpg';
 
 const About = () => {
   return (

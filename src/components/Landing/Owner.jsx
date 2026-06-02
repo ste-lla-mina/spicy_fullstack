@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import fryingBg from '../assets/frying.jpg';
+import fryingBg from '../../assets/frying.jpg';
 
 const Owner = ({ initialData }) => {
   const [currentStep, setCurrentStep] = useState(1);

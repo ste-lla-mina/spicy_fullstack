@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Bell, LogIn, X } from 'lucide-react';
-import logo from '../assets/logo.png';
+import logo from '../../assets/logo.png';
 
 const Navbar = ({ onNavigate }) => {
   const [activeSection, setActiveSection] = useState('home');
