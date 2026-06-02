@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, User, Store } from 'lucide-react';
 import signBg from '../../assets/sign.png'; 
 import logoImg from '../../assets/logo.png';
+import OwnerDashboard from '../OwnerDashboard/Ownerdashboard';
 
 const Login = ({onNavigate}) => {
   const [role, setRole] = useState('client'); 
@@ -23,7 +24,7 @@ const Login = ({onNavigate}) => {
 
   if (isLoggedIn) {
     if (role === 'owner') {
-      return "Hello";
+      return <OwnerDashboard credentials={loginData} />;;
     }
     return "Hi";
   }
