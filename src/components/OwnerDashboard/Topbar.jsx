@@ -4,7 +4,7 @@ import { Search, Bell } from 'lucide-react';
 const TopBar = () => {
   return (
     <header className="fixed top-0 left-64 right-0 h-20 px-10 flex items-center justify-between bg-cover bg-center border-b border-white/5 overflow-hidden z-30" style={{ backgroundImage: `url(/src/assets/frying.jpg)` }}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-[4px] pointer-events-none" />
+      <div className="absolute inset-0 bg-black/80  pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-md">
         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white">
