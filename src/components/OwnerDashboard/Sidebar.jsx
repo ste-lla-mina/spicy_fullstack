@@ -13,7 +13,7 @@ const Sidebar = ({ activeSection, setActiveSection, onNavigate }) => {
 
   return (
     <aside className="fixed top-0 left-0 w-64 h-screen bg-cover bg-center flex flex-col justify-between overflow-hidden select-none border-r border-white/5 z-40" style={{ backgroundImage: `url(/src/assets/frying.jpg)` }}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-[4px] pointer-events-none" />
+      <div className="absolute inset-0 bg-black/80  pointer-events-none" />
       
       <div className="relative z-10 flex flex-col space-y-10 pt-8 px-6">
         <div className="flex items-center gap-3 px-2">
@@ -68,7 +68,7 @@ const Sidebar = ({ activeSection, setActiveSection, onNavigate }) => {
           </button>
         </div>
 
-        <div className="w-full h-28 overflow-hidden border-t border-white/10 mt-2">
+        <div className="w-full h-20 overflow-hidden border-t border-white/10 mt-2">
           <img 
             src="/src/assets/roasted.jpg" 
             alt="Food Banner" 
