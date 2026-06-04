@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import fryingBg from '../../assets/frying.jpg';
 
-const Owner = ({ initialData }) => {
+const Owner = ({ initialData, onNavigate }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [onboardingData, setOnboardingData] = useState({
     ownerName: initialData?.fullName || '',
@@ -175,7 +175,10 @@ const Owner = ({ initialData }) => {
                   <button onClick={prevStep} className="bg-neutral-800 hover:bg-neutral-700 p-3 rounded-full text-white transition-transform active:scale-95">
                     <ArrowLeft size={18} />
                   </button>
-                  <button className="bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold px-8 py-2.5 rounded-xl text-sm tracking-wide transition-all shadow-[0_4px_15px_rgba(249,155,12,0.3)] active:scale-95">
+                  <button 
+                    onClick={() => onNavigate('login')}
+                    className="bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold px-8 py-2.5 rounded-xl text-sm tracking-wide transition-all shadow-[0_4px_15px_rgba(249,155,12,0.3)] active:scale-95"
+                  >
                     Submit
                   </button>
                 </div>
