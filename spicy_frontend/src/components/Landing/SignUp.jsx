@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, User, Store } from 'lucide-react';
+import { Eye, EyeOff, User, Store, ArrowLeft } from 'lucide-react';
 import signBg from '../../assets/sign.png';
 import logoImg from '../../assets/logo.png';
 import Owner from './Owner';
@@ -25,11 +25,11 @@ const SignUp = ({onNavigate}) => {
   };
 
   if (role === 'owner' && isSubmitted) {
-    return <Owner initialData={formData} />;
+    return <Owner initialData={formData} onNavigate={onNavigate} />;
   }
 
   if (role === 'client' && isSubmitted) {
-    return <ClientVerification email={formData.email} />;
+    return <ClientVerification email={formData.email} onNavigate={onNavigate} />;
   }
 
   return (
@@ -51,6 +51,12 @@ const SignUp = ({onNavigate}) => {
         </div>
 
         <div className="lg:col-span-5 w-full max-w-md mx-auto bg-[#000000] border border-white/10 rounded-2xl p-8 shadow-2xl flex flex-col space-y-6">
+           <button 
+            onClick={() => onNavigate('home')}
+            className="flex items-center gap-2 text-sm text-[#f99b0c] hover:text-gray-400 transition-colors bg-transparent border-none cursor-pointer p-0 mb-4"
+          >
+            <ArrowLeft size={16} /> Back to Home
+          </button>
           <div className="text-center space-y-1">
             <h2 className="text-2xl font-extrabold tracking-wide">Sign Up.</h2>
             <p className="text-gray-400 text-xs font-semibold">Choose account type to get started</p>
@@ -169,7 +175,7 @@ const SignUp = ({onNavigate}) => {
   );
 };
 
-const ClientVerification = ({ email }) => {
+const ClientVerification = ({ email, onNavigate }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
 
   const handleOtpChange = (element, index) => {
@@ -206,7 +212,10 @@ const ClientVerification = ({ email }) => {
           ))}
         </div>
 
-        <button className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-98 text-sm tracking-wide">
+        <button 
+          onClick={() => onNavigate('login')}
+          className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-98 text-sm tracking-wide"
+        >
           Submit
         </button>
       </div>
