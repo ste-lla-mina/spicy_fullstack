@@ -3,6 +3,7 @@ import { Eye, EyeOff, User, Store, ArrowLeft } from 'lucide-react';
 import signBg from '../../assets/sign.png'; 
 import logoImg from '../../assets/logo.png';
 import OwnerDashboard from '../OwnerDashboard/Ownerdashboard';
+import ClientDashboard from '../ClientDashboard/Clientdashboard';
 
 const Login = ({ onNavigate }) => {
   const [role, setRole] = useState('client'); 
@@ -31,7 +32,7 @@ const Login = ({ onNavigate }) => {
     if (role === 'owner') {
       return <OwnerDashboard onLogout={handleLogout} credentials={loginData} />;
     }
-    return "Hi";
+    return <ClientDashboard onLogout={handleLogout} credentials={loginData} />;
   }
 
   return (
