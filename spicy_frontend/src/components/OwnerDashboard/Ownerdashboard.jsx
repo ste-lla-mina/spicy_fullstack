@@ -4,9 +4,12 @@ import TopBar from './TopBar';
 import Overview from './Overview';
 import Menu from './Menu';
 import Orders from './Order';
+import Clients from './Clients';
+import Tables from './Table';
+import Settings from './Settings';
 
-const OwnerDashboard = ({ onNavigate }) => {
-  const [activeSection, setActiveSection] = useState('orders'); // Defaults to orders view for testing
+const OwnerDashboard = ({ onLogout, credentials }) => {
+  const [activeSection, setActiveSection] = useState('overview');
 
   return (
     <div className="w-full min-h-screen bg-cover bg-center text-white flex select-none font-sans relative" style={{ backgroundImage: `url(/src/assets/bg.jpg)` }}>
@@ -15,22 +18,19 @@ const OwnerDashboard = ({ onNavigate }) => {
       <Sidebar 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
-        onNavigate={onNavigate} 
+        onLogout={onLogout} 
       />
 
       <div className="flex-1 flex flex-col min-h-screen ml-64 relative z-10">
-        <TopBar />
+        <TopBar credentials={credentials} />
 
         <main className="flex-1 mt-20 overflow-y-auto">
           {activeSection === 'overview' && <Overview />}
           {activeSection === 'menu' && <Menu />}
           {activeSection === 'orders' && <Orders />}
-          
-          {activeSection !== 'overview' && activeSection !== 'menu' && activeSection !== 'orders' && (
-            <div className="animate-in fade-in duration-200 text-center py-20 text-gray-500 text-sm">
-              Section "{activeSection}" content subcomponent wireframe setup ready.
-            </div>
-          )}
+          {activeSection === 'clients' && <Clients />}
+          {activeSection === 'tables' && <Tables />}
+          {activeSection === 'settings' && <Settings />}
         </main>
       </div>
     </div>
