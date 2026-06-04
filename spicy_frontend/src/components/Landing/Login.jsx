@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, User, Store } from 'lucide-react';
+import { Eye, EyeOff, User, Store, ArrowLeft } from 'lucide-react';
 import signBg from '../../assets/sign.png'; 
 import logoImg from '../../assets/logo.png';
 import OwnerDashboard from '../OwnerDashboard/Ownerdashboard';
 
-const Login = ({onNavigate}) => {
+const Login = ({ onNavigate }) => {
   const [role, setRole] = useState('client'); 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,18 +22,23 @@ const Login = ({onNavigate}) => {
     setIsLoggedIn(true);
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setLoginData({ email: '', password: '' });
+  };
+
   if (isLoggedIn) {
     if (role === 'owner') {
-      return <OwnerDashboard credentials={loginData} />;;
+      return <OwnerDashboard onLogout={handleLogout} credentials={loginData} />;
     }
     return "Hi";
   }
 
   return (
     <div 
-          className="w-full min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-6 py-12 select-none text-white relative"
-          style={{ backgroundImage: `url(${signBg})` }}
-        >
+      className="w-full min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-6 py-12 select-none text-white relative"
+      style={{ backgroundImage: `url(${signBg})` }}
+    >
       <div className="absolute inset-0 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-12 gap-12 items-center rounded-3xl p-8 lg:p-12 border border-white/5">
@@ -46,6 +51,12 @@ const Login = ({onNavigate}) => {
           </div>
         </div>
         <div className="lg:col-span-5 w-full max-w-md mx-auto bg-[#000000]/90 border border-white/10 rounded-2xl p-8 shadow-2xl flex flex-col space-y-6">
+         <button 
+            onClick={() => onNavigate('home')}
+            className="flex items-center gap-2 text-sm text-[#f99b0c] hover:text-gray-400 transition-colors bg-transparent border-none cursor-pointer p-0 mb-4"
+          >
+            <ArrowLeft size={16} /> Back to Home
+          </button>
           <div className="text-center space-y-1">
             <h2 className="text-2xl font-extrabold tracking-wide">Welcome.</h2>
             <p className="text-gray-400 text-xs font-semibold">Login to SupaMenu.</p>
@@ -128,12 +139,12 @@ const Login = ({onNavigate}) => {
             <p className="text-xs text-gray-400">
               Don't have an account?{' '}
               <button 
-          type="button"
-          onClick={() => onNavigate('signup')} 
-          className="text-[#F99B0C] hover:underline font-semibold bg-transparent border-none cursor-pointer p-0 align-baseline"
-        >
-          SignUp
-        </button>
+                type="button"
+                onClick={() => onNavigate('signup')} 
+                className="text-[#F99B0C] hover:underline font-semibold bg-transparent border-none cursor-pointer p-0 align-baseline"
+              >
+                SignUp
+              </button>
             </p>
           </div>
         </div>
