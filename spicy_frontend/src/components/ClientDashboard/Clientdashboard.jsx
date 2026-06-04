@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import TopBar from './TopBar';  
 import Menu from './Menu'; 
 import Orders from './Orders';
+import Tables from './Tables';
+import Settings from './Settings';
 
 
 const ClientDashboard = ({ onLogout, credentials }) => {
@@ -29,6 +31,8 @@ const ClientDashboard = ({ onLogout, credentials }) => {
        <Menu onAddToOrder={(item) => console.log("Selected to checkout:", item)} />
       )}
         {activeSection === 'orders' && <Orders />}
+        {activeSection === 'tables' && <Tables/>}
+        {activeSection === 'settings' && <Settings/>}
         </main>
       </div>
     </div>
