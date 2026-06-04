@@ -1,10 +1,21 @@
 import React from 'react';
 import { Search, Bell } from 'lucide-react';
 
-const TopBar = () => {
+const TopBar = ({ credentials }) => {
+  const getDisplayName = () => {
+    if (credentials && credentials.email) {
+      const namePart = credentials.email.split('@')[0];
+      return namePart
+        .split(/[._-]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+    return 'Gretta Teta';
+  };
+
   return (
     <header className="fixed top-0 left-64 right-0 h-20 px-10 flex items-center justify-between bg-cover bg-center border-b border-white/5 overflow-hidden z-30" style={{ backgroundImage: `url(/src/assets/frying.jpg)` }}>
-      <div className="absolute inset-0 bg-black/80  pointer-events-none" />
+      <div className="absolute inset-0 bg-black/80 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-md">
         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white">
@@ -24,7 +35,7 @@ const TopBar = () => {
         </button>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold text-gray-300">Gretta Teta</span>
+          <span className="text-xs font-semibold text-gray-300">{getDisplayName()}</span>
           <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-white/10 overflow-hidden">
             <img 
               src="src/assets/profile.jpg" 
