@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutDashboard, Utensils, ClipboardList, Users, SquareDot, Settings, LogOut } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
-const Sidebar = ({ activeSection, setActiveSection, onNavigate }) => {
+const Sidebar = ({ activeSection, setActiveSection, onLogout }) => {
   const menuItems = [
     { id: 'overview', label: 'Overview.', icon: LayoutDashboard },
     { id: 'menu', label: 'Menu', icon: Utensils },
@@ -13,7 +13,7 @@ const Sidebar = ({ activeSection, setActiveSection, onNavigate }) => {
 
   return (
     <aside className="fixed top-0 left-0 w-64 h-screen bg-cover bg-center flex flex-col justify-between overflow-hidden select-none border-r border-white/5 z-40" style={{ backgroundImage: `url(/src/assets/frying.jpg)` }}>
-      <div className="absolute inset-0 bg-black/80  pointer-events-none" />
+      <div className="absolute inset-0 bg-black/80 pointer-events-none" />
       
       <div className="relative z-10 flex flex-col space-y-10 pt-8 px-6">
         <div className="flex items-center gap-3 px-2">
@@ -60,7 +60,7 @@ const Sidebar = ({ activeSection, setActiveSection, onNavigate }) => {
           </button>
 
           <button
-            onClick={() => onNavigate('landing')}
+            onClick={onLogout}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-xs font-bold text-white hover:text-red-400 hover:bg-red-500/5 transition-all text-left"
           >
             <LogOut size={18} />
