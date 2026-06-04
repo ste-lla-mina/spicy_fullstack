@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar'; 
-import TopBar from './TopBar';   
+import TopBar from './TopBar';  
+import Menu from './Menu'; 
+import Orders from './Orders';
 
 
 const ClientDashboard = ({ onLogout, credentials }) => {
-  const [activeSection, setActiveSection] = useState('overview');
+  const [activeSection, setActiveSection] = useState('menu');
 
   return (
     <div 
       className="w-full min-h-screen bg-cover bg-center text-white flex select-none font-sans relative" 
-      style={{ backgroundImage: `url(/src/assets/bg.jpg)` }}
+      style={{ backgroundImage: `url(/src/assets/bg.png)` }}
     >
-      <div className="absolute inset-0 bg-black/95 pointer-events-none" />
+      <div className="absolute inset-0  pointer-events-none" />
 
       <Sidebar 
         activeSection={activeSection} 
@@ -23,12 +25,10 @@ const ClientDashboard = ({ onLogout, credentials }) => {
         <TopBar credentials={credentials} />
 
         <main className="flex-1 mt-20 p-10 overflow-y-auto">
-          {activeSection === 'overview' && (
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold">Welcome Back!</h1>
-              <p className="text-gray-400 text-sm">Explore meals and manage your orders instantly.</p>
-            </div>
-          )}
+        {activeSection === 'menu' && (
+       <Menu onAddToOrder={(item) => console.log("Selected to checkout:", item)} />
+      )}
+        {activeSection === 'orders' && <Orders />}
         </main>
       </div>
     </div>
