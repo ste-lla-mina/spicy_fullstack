@@ -32,30 +32,19 @@ const Login = ({ onNavigate }) => {
     e.preventDefault();
     setIsLoggedIn(true);
   };
-
-  // Step 1: Submit Email to get the 6-digit code
   const handleEmailSubmit = (e) => {
     e.preventDefault();
-    // API Call: axios.post('/api/auth/forgot-password', { email: forgotEmail })
     alert(`A 6-digit verification code has been dispatched to: ${forgotEmail}`);
-    setForgotStep(2); // Advance to verification code input stage
+    setForgotStep(2); 
   };
-
-  // Step 2: Submit the 6-digit code to verify ownership
   const handleCodeSubmit = (e) => {
     e.preventDefault();
-    // API Call: axios.post('/api/auth/verify-reset-code', { email: forgotEmail, code: verificationCode })
     alert("Code verified successfully! You can now set your new password.");
-    setForgotStep(3); // Advance to new password input stage
+    setForgotStep(3);
   };
-
-  // Step 3: Submit the new password to update the DB
   const handlePasswordResetSubmit = (e) => {
     e.preventDefault();
-    // API Call: axios.post('/api/auth/reset-password', { email: forgotEmail, code: verificationCode, password: newPassword })
     alert("Your password has been reset successfully. Please log in with your new credentials.");
-    
-    // Clean up states and return back to the login screen
     setIsForgotPassword(false);
     setForgotStep(1);
     setForgotEmail('');
@@ -97,9 +86,9 @@ const Login = ({ onNavigate }) => {
             onClick={() => {
               if (isForgotPassword) {
                 if (forgotStep > 1) {
-                  setForgotStep(forgotStep - 1); // Move one step back
+                  setForgotStep(forgotStep - 1); 
                 } else {
-                  setIsForgotPassword(false); // Drop back out to standard login view
+                  setIsForgotPassword(false); 
                 }
               } else {
                 onNavigate('home');
@@ -111,7 +100,6 @@ const Login = ({ onNavigate }) => {
           </button>
 
           {isForgotPassword ? (
-            /* Multi-step Forgot Password Flow Layout */
             <>
               <div className="text-center space-y-1">
                 <h2 className="text-2xl font-extrabold tracking-wide">
@@ -125,8 +113,6 @@ const Login = ({ onNavigate }) => {
                   {forgotStep === 3 && "Secure your profile by typing a brand new password."}
                 </p>
               </div>
-
-              {/* STEP 1: REQUEST EMAIL FORM */}
               {forgotStep === 1 && (
                 <form onSubmit={handleEmailSubmit} className="space-y-4">
                   <div className="flex flex-col space-y-1.5">
@@ -148,8 +134,6 @@ const Login = ({ onNavigate }) => {
                   </button>
                 </form>
               )}
-
-              {/* STEP 2: VERIFY 6-DIGIT CODE FORM */}
               {forgotStep === 2 && (
                 <form onSubmit={handleCodeSubmit} className="space-y-4">
                   <div className="flex flex-col space-y-1.5">
@@ -172,8 +156,6 @@ const Login = ({ onNavigate }) => {
                   </button>
                 </form>
               )}
-
-              {/* STEP 3: RESET PASSWORD TYPE NEW TARGET FORM */}
               {forgotStep === 3 && (
                 <form onSubmit={handlePasswordResetSubmit} className="space-y-4">
                   <div className="flex flex-col space-y-1.5 relative">
@@ -206,7 +188,6 @@ const Login = ({ onNavigate }) => {
               )}
             </>
           ) : (
-            /* Main Login Input Workflow Form */
             <>
               <div className="text-center space-y-1">
                 <h2 className="text-2xl font-extrabold tracking-wide">Welcome.</h2>
