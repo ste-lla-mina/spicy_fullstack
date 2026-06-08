@@ -61,16 +61,17 @@ const AddOrder = ({ isOpen, onClose, onSave }) => {
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
               Item <span className="text-red-500">*</span>
             </label>
-          <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></span>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Item Name"
-                  value={unitPrice}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl pl-8 pr-4 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C] transition-all"
-                />
-              </div>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></span>
+              <input 
+                type="text" 
+                required
+                placeholder="Item Name"
+                value={item}
+                onChange={(e) => setItem(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 rounded-xl pl-8 pr-4 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C] transition-all"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
