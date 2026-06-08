@@ -3,11 +3,14 @@ import { Eye, EyeOff, User, Store, ArrowLeft } from 'lucide-react';
 import signBg from '../../assets/sign.png';
 import logoImg from '../../assets/logo.png';
 import Owner from './Owner';
+import { authApi } from '../../api/client';
 
-const SignUp = ({onNavigate}) => {
-  const [role, setRole] = useState('client'); 
+const SignUp = ({ onNavigate }) => {
+  const [role, setRole] = useState('client');
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingOwner, setPendingOwner] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -19,28 +22,54 @@ const SignUp = ({onNavigate}) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
+
+    if (role === 'owner') {
+      setPendingOwner(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await authApi.signup({
+        name: formData.fullName,
+        phone: formData.phoneNumber,
+        email: formData.email,
+        password: formData.password,
+        role: 'client'
+      });
+      setRegisteredEmail(formData.email);
+    } catch (error) {
+      const message = error.response?.data?.message || 'Sign up failed';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (role === 'owner' && isSubmitted) {
+  if (role === 'owner' && pendingOwner) {
     return <Owner initialData={formData} onNavigate={onNavigate} />;
   }
 
-  if (role === 'client' && isSubmitted) {
-    return <ClientVerification email={formData.email} onNavigate={onNavigate} />;
+  if (registeredEmail) {
+    return (
+      <ClientVerification
+        email={registeredEmail}
+        onNavigate={onNavigate}
+      />
+    );
   }
 
   return (
-    <div 
+    <div
       className="w-full min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-6 py-12 select-none text-white relative"
       style={{ backgroundImage: `url(${signBg})` }}
     >
       <div className="absolute inset-0 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-12 gap-12 items-center rounded-3xl p-8 lg:p-12 border border-white/5 ">
-        
+
         <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4">
           <div className="flex items-center gap-2">
             <img src={logoImg} alt="Spicy Logo" className="h-12 object-contain" />
@@ -51,7 +80,7 @@ const SignUp = ({onNavigate}) => {
         </div>
 
         <div className="lg:col-span-5 w-full max-w-md mx-auto bg-[#000000] border border-white/10 rounded-2xl p-8 shadow-2xl flex flex-col space-y-6">
-           <button 
+          <button
             onClick={() => onNavigate('home')}
             className="flex items-center gap-2 text-sm text-[#f99b0c] hover:text-gray-400 transition-colors bg-transparent border-none cursor-pointer p-0 mb-4"
           >
@@ -90,39 +119,39 @@ const SignUp = ({onNavigate}) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col space-y-1.5">
               <label className="text-gray-400 uppercase text-[10px] font-bold tracking-widest pl-1">Full Name</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="fullName"
                 required
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder="John Doe" 
+                placeholder="John Doe"
                 className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C]/50 transition-all"
               />
             </div>
 
             <div className="flex flex-col space-y-1.5">
               <label className="text-gray-400 uppercase text-[10px] font-bold tracking-widest pl-1">Phone Number</label>
-              <input 
-                type="tel" 
+              <input
+                type="tel"
                 name="phoneNumber"
                 required
                 value={formData.phoneNumber}
                 onChange={handleChange}
-                placeholder="+250 788 123 456" 
+                placeholder="+250 788 123 456"
                 className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C]/50 transition-all"
               />
             </div>
 
             <div className="flex flex-col space-y-1.5">
               <label className="text-gray-400 uppercase text-[10px] font-bold tracking-widest pl-1">Email</label>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 name="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@example.com" 
+                placeholder="john@example.com"
                 className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C]/50 transition-all"
               />
             </div>
@@ -130,13 +159,13 @@ const SignUp = ({onNavigate}) => {
             <div className="flex flex-col space-y-1.5 relative">
               <label className="text-gray-400 uppercase text-[10px] font-bold tracking-widest pl-1">Password</label>
               <div className="relative w-full">
-                <input 
-                  type={showPassword ? "text" : "password"} 
+                <input
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter a strong password" 
+                  placeholder="Enter a strong password"
                   className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 pr-11 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C]/50 transition-all"
                 />
                 <button
@@ -151,21 +180,22 @@ const SignUp = ({onNavigate}) => {
 
             <button
               type="submit"
-              className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-2"
+              disabled={isSubmitting}
+              className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] disabled:opacity-60 text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-2"
             >
-              Sign Up.
+              {isSubmitting ? 'Creating account...' : 'Sign Up.'}
             </button>
           </form>
-             <div className="text-center pt-2">
+          <div className="text-center pt-2">
             <p className="text-xs text-gray-400">
               Already have account?{' '}
-              <button 
-          type="button"
-          onClick={() => onNavigate('login')} 
-          className="text-[#F99B0C] hover:underline font-semibold bg-transparent border-none cursor-pointer p-0 align-baseline"
-        >
-          Login
-        </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('login')}
+                className="text-[#F99B0C] hover:underline font-semibold bg-transparent border-none cursor-pointer p-0 align-baseline"
+              >
+                Login
+              </button>
             </p>
           </div>
         </div>
@@ -176,7 +206,9 @@ const SignUp = ({onNavigate}) => {
 };
 
 const ClientVerification = ({ email, onNavigate }) => {
-  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [otp, setOtp] = useState(new Array(6).fill(''));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
   const handleOtpChange = (element, index) => {
     if (isNaN(element.value)) return false;
@@ -186,8 +218,44 @@ const ClientVerification = ({ email, onNavigate }) => {
     }
   };
 
+  const handleVerify = async () => {
+    const code = otp.join('');
+    if (code.length !== 6) {
+      alert('Please enter the full 6-digit code.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { data } = await authApi.verify({ email, code });
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+      alert(data.message || 'Account verified successfully!');
+      onNavigate('login');
+    } catch (error) {
+      const message = error.response?.data?.message || 'Verification failed';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setIsResending(true);
+    try {
+      const { data } = await authApi.resendVerification({ email });
+      alert(data.message);
+    } catch (error) {
+      const message = error.response?.data?.message || 'Could not resend code';
+      alert(message);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
-    <div 
+    <div
       className="w-full min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-6 overflow-hidden select-none text-white"
       style={{ backgroundImage: `url(/src/assets/frying.jpg)` }}
     >
@@ -212,11 +280,21 @@ const ClientVerification = ({ email, onNavigate }) => {
           ))}
         </div>
 
-        <button 
-          onClick={() => onNavigate('login')}
-          className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-98 text-sm tracking-wide"
+        <button
+          onClick={handleVerify}
+          disabled={isSubmitting}
+          className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] disabled:opacity-60 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-98 text-sm tracking-wide"
         >
-          Submit
+          {isSubmitting ? 'Verifying...' : 'Submit'}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleResend}
+          disabled={isResending}
+          className="text-xs text-[#F99B0C] hover:underline bg-transparent border-none cursor-pointer"
+        >
+          {isResending ? 'Sending...' : 'Resend code'}
         </button>
       </div>
     </div>
