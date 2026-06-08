@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, Mail, Phone, Lock, Eye, EyeOff, Shield, Bell, Save } from 'lucide-react';
+import { authApi, userApi } from '../../api/client';
 
 const Settings = () => {
   const [profile, setProfile] = useState({
-    name: 'John Tee',
-    email: 'john.tee@example.com',
-    phone: '+1 (555) 019-2834',
+    name: '',
+    email: '',
+    phone: '',
   });
 
   const [passwords, setPasswords] = useState({
@@ -30,19 +31,50 @@ const Settings = () => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
   };
 
-  const handleSaveProfile = (e) => {
+  useEffect(() => {
+    authApi.getMe()
+      .then(({ data }) => {
+        setProfile({ name: data.name, email: data.email, phone: data.phone });
+        if (data.notifications) setNotifications(data.notifications);
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
-    alert('Profile information updated successfully!');
+    try {
+      const { data } = await userApi.updateProfile(profile);
+      alert(data.message || 'Profile updated');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update profile');
+    }
   };
 
-  const handleUpdatePassword = (e) => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
     if (passwords.new !== passwords.confirm) {
-      alert("New passwords do not match!");
+      alert('New passwords do not match!');
       return;
     }
-    alert('Security password updated successfully!');
-    setPasswords({ current: '', new: '', confirm: '' });
+    try {
+      const { data } = await userApi.updatePassword({
+        currentPassword: passwords.current,
+        newPassword: passwords.new
+      });
+      alert(data.message || 'Password updated');
+      setPasswords({ current: '', new: '', confirm: '' });
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update password');
+    }
+  };
+
+  const saveNotifications = async (next) => {
+    setNotifications(next);
+    try {
+      await userApi.updateNotifications(next);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -216,7 +248,7 @@ const Settings = () => {
                   <input 
                     type="checkbox" 
                     checked={notifications.orderStatus}
-                    onChange={(e) => setNotifications({...notifications, orderStatus: e.target.checked})}
+                    onChange={(e) => saveNotifications({ ...notifications, orderStatus: e.target.checked })}
                     className="w-4 h-4 rounded border-zinc-900 bg-zinc-950 text-[#FF9F0D] focus:ring-0 focus:ring-offset-0 accent-[#FF9F0D]"
                   />
                 </div>
@@ -229,7 +261,7 @@ const Settings = () => {
                   <input 
                     type="checkbox" 
                     checked={notifications.discounts}
-                    onChange={(e) => setNotifications({...notifications, discounts: e.target.checked})}
+                    onChange={(e) => saveNotifications({ ...notifications, discounts: e.target.checked })}
                     className="w-4 h-4 rounded border-zinc-900 bg-zinc-950 text-[#FF9F0D] focus:ring-0 focus:ring-offset-0 accent-[#FF9F0D]"
                   />
                 </div>
