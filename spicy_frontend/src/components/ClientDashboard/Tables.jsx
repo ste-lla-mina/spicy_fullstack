@@ -1,21 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, Users, X, ChevronLeft, ChevronRight, Filter, SlidersHorizontal, MessageSquare, AlertCircle } from 'lucide-react';
+import { tableApi } from '../../api/client';
 
 const Tables = () => {
-  const [tables] = useState([
-    { id: 1, capacity: 2, location: 'Window', features: ['WiFi', 'Quiet'], available: true, reserved: false },
-    { id: 2, capacity: 4, location: 'Near Bar', features: ['WiFi', 'Heating'], available: true, reserved: false },
-    { id: 3, capacity: 4, location: 'Center', features: ['WiFi', 'AC', 'Quiet'], available: false, reserved: true },
-    { id: 4, capacity: 6, location: 'Corner', features: ['Heating', 'WiFi'], available: true, reserved: false },
-    { id: 5, capacity: 2, location: 'Bar Side', features: ['WiFi', 'Bar View'], available: true, reserved: false },
-    { id: 6, capacity: 8, location: 'Private Area', features: ['WiFi', 'Quiet', 'Heating'], available: true, reserved: false },
-    { id: 7, capacity: 2, location: 'Window', features: ['WiFi', 'AC'], available: true, reserved: false },
-    { id: 8, capacity: 4, location: 'Center', features: ['WiFi', 'Quiet', 'Bar View'], available: false, reserved: true },
-    { id: 9, capacity: 4, location: 'Near Bar', features: ['Heating', 'AC'], available: true, reserved: false },
-    { id: 10, capacity: 2, location: 'Corner', features: ['WiFi', 'Quiet'], available: true, reserved: false },
-    { id: 11, capacity: 6, location: 'Near Window', features: ['WiFi', 'Heating', 'Bar View'], available: true, reserved: false },
-    { id: 12, capacity: 4, location: 'Center Stage', features: ['WiFi', 'Quiet', 'Heating'], available: true, reserved: false },
-  ]);
+  const [tables, setTables] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState('24 Aug 2025');
   const [selectedTime, setSelectedTime] = useState('8:00 PM');
@@ -34,6 +22,22 @@ const Tables = () => {
     { id: 'bar', label: 'Bar View', icon: '🍹' },
   ];
 
+  const loadTables = async () => {
+    try {
+      const { data } = await tableApi.getAvailable({
+        partySize,
+        amenities: selectedAmenities.join(',')
+      });
+      setTables(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    loadTables();
+  }, [partySize, selectedAmenities]);
+
   const toggleAmenity = (amenityId) => {
     setSelectedAmenities(prev =>
       prev.includes(amenityId) ? prev.filter(a => a !== amenityId) : [...prev, amenityId]
@@ -46,37 +50,30 @@ const Tables = () => {
     setShowReservationModal(true);
   };
 
-  const handleReserveTable = () => {
-    if (selectedTable) {
-      const reservation = {
-        id: Date.now(),
-        tableId: selectedTable.id,
+  const handleReserveTable = async () => {
+    if (!selectedTable) return;
+    try {
+      const { data } = await tableApi.reserve({
+        tableId: selectedTable.id || selectedTable._id,
         date: selectedDate,
         time: selectedTime,
-        partySize: partySize,
-        notes: specialNotes,
-        tableName: `Table #${selectedTable.id}`,
-        capacity: selectedTable.capacity,
-        location: selectedTable.location,
-      };
-      setReservations(prev => [...prev, reservation]);
+        partySize,
+        notes: specialNotes
+      });
+      setReservations((prev) => [...prev, data]);
       setShowReservationModal(false);
       setSelectedTable(null);
+      await loadTables();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Reservation failed');
     }
   };
 
-  const filteredTables = tables.filter(table => {
-    const capacityMatch = table.capacity >= partySize;
-    const amenitiesMatch = selectedAmenities.length === 0 || 
-      selectedAmenities.some(amenity => 
-        table.features.some(feature => feature.toLowerCase().includes(amenity))
-      );
-    return capacityMatch && amenitiesMatch && table.available;
-  });
+  const filteredTables = tables;
 
   return (
     <div 
-      className="w-full min-h-screen bg-zinc-950 text-zinc-100 p-6 md:p-12 relative font-sans antialiased selection:bg-[#FF9F0D]/30 selection:text-white"
+      className="w-full min-h-screen bg-zinc-950 text-zinc-100 p-6 md:p-12 relative font-sans antialiased selection:bg-[#FF9F0D]/30 selection:text-white overflow-x-hidden"
       style={{ 
         backgroundImage: `radial-gradient(circle at 50% 0%, rgba(255, 159, 13, 0.15) 0%, transparent 50%), url('/src/assets/bg.png')`,
         backgroundSize: 'cover',
@@ -190,7 +187,7 @@ const Tables = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                 {filteredTables.map(table => (
                   <button
-                    key={table.id}
+                    key={table._id || table.id || table.tableNo}
                     onClick={() => handleTableSelect(table)}
                     className={`relative group transition-all duration-300 outline-none ${
                       table.reserved ? 'opacity-25 cursor-not-allowed' : 'cursor-pointer'
@@ -203,11 +200,11 @@ const Tables = () => {
                         : 'bg-gradient-to-b from-zinc-900/90 to-zinc-950/90 border-zinc-800 text-zinc-300 group-hover:border-[#FF9F0D] group-hover:text-[#FF9F0D] group-hover:scale-[1.06] group-hover:shadow-[0_10px_30px_rgba(255,159,13,0.15)]'
                     }`}>
                       <span className="text-xs font-semibold text-zinc-500 group-hover:text-[#FF9F0D]/70 transition-colors">Table</span>
-                      <span className="text-3xl font-black tracking-tight">{table.id}</span>
+                      <span className="text-3xl font-black tracking-tight">{table.tableNo || (table._id || table.id)}</span>
                       <span className="text-[10px] font-medium text-zinc-500 mt-1 group-hover:text-zinc-400">{table.capacity} Seats</span>
                     </div>
                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 whitespace-nowrap text-[11px] font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl z-20 text-zinc-300">
-                      View Table #{table.id} Details
+                      View Table #{table.tableNo || (table._id || table.id)} Details
                     </div>
                   </button>
                 ))}
@@ -250,7 +247,7 @@ const Tables = () => {
                 <span className="text-xl">🥂</span>
               </div>
               <div>
-                <h2 className="text-xl font-black text-white">Table Setup #{selectedTable.id}</h2>
+                <h2 className="text-xl font-black text-white">Table Setup #{selectedTable.tableNo || (selectedTable._id || selectedTable.id)}</h2>
                 <p className="text-xs text-zinc-400">{selectedTable.location} Placement</p>
               </div>
             </div>
