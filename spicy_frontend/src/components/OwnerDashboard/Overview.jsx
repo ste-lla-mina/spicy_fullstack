@@ -1,26 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MoreVertical } from 'lucide-react';
-import shawarmaImg from '../../assets/shawarma.jpg';
-import friesImg from '../../assets/fries.jpg';
+import { overviewApi, resolveImage } from '../../api/client';
 
 const Overview = () => {
-  const stats = [
-    { label: 'Menu', value: '346' },
-    { label: 'Clients', value: '221' },
-    { label: 'Revenue', value: '$ 951' },
-    { label: 'Tables Taken', value: '48' }
-  ];
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const clients = [
-    { name: 'Nobleza Hotel', orders: '56 orders last week' },
-    { name: 'Capcino Burgers', orders: '48 orders last week' },
-    { name: 'Drimm Bakery', orders: '39 orders last week' }
-  ];
+  useEffect(() => {
+    overviewApi.get()
+      .then(({ data: res }) => setData(res))
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const menuItems = [
-    { name: 'Shawarma', image: shawarmaImg },
-    { name: 'Cheese Fries', image: friesImg }
-  ];
+  if (loading) {
+    return <div className="p-8 text-gray-400">Loading overview...</div>;
+  }
+
+  const stats = data?.stats || [];
+  const clients = data?.topClients || [];
+  const menuItems = data?.topMenuItems || [];
+  const foodPct = data?.salesBreakdown?.food ?? 75;
+  const drinksPct = data?.salesBreakdown?.drinks ?? 25;
 
   return (
     <div className="w-full min-h-screen bg-cover bg-center p-8 font-sans select-none relative" style={{ backgroundImage: `url(/src/assets/bg.png)` }}>
@@ -63,35 +64,16 @@ const Overview = () => {
             <div className="flex justify-center my-auto py-4">
               <div className="relative w-48 h-48">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <path
-                    className="text-white"
-                    strokeWidth="4.5"
-                    stroke="currentColor"
-                    fill="transparent"
-                    strokeDasharray="100 100"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="text-[#F99B0C]"
-                    strokeWidth="4.5"
-                    strokeDasharray="75 100"
-                    strokeLinecap="square"
-                    stroke="currentColor"
-                    fill="transparent"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
+                  <path className="text-white" strokeWidth="4.5" stroke="currentColor" fill="transparent" strokeDasharray="100 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path className="text-[#F99B0C]" strokeWidth="4.5" strokeDasharray={`${foodPct} 100`} strokeLinecap="square" stroke="currentColor" fill="transparent" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 </svg>
                 <div className="absolute inset-0 bg-[#070707] rounded-full m-[22px]" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mt-6">
-              <div className="bg-white text-center py-3 rounded-full font-bold text-xs text-[#F99B0C]">
-                Food: 75%
-              </div>
-              <div className="bg-[#F99B0C] text-center py-3 rounded-full font-bold text-xs text-white">
-                Drinks: 25%
-              </div>
+              <div className="bg-white text-center py-3 rounded-full font-bold text-xs text-[#F99B0C]">Food: {foodPct}%</div>
+              <div className="bg-[#F99B0C] text-center py-3 rounded-full font-bold text-xs text-white">Drinks: {drinksPct}%</div>
             </div>
           </div>
 
@@ -113,7 +95,7 @@ const Overview = () => {
               {menuItems.map((item, i) => (
                 <div key={i} className="border border-white/10 bg-transparent rounded-2xl p-3 flex flex-col items-center space-y-3">
                   <div className="w-full h-24 rounded-xl overflow-hidden border border-white/5">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <img src={resolveImage(item.image)} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <span className="text-xs font-bold text-[#F99B0C] tracking-wide">{item.name}</span>
                 </div>
