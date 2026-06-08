@@ -9,11 +9,16 @@ const AddMenu = ({ isOpen, onClose, onSave }) => {
   const [price, setPrice] = useState('');
   const [cost, setCost] = useState('');
   const [status, setStatus] = useState('Active');
+  const [isSpecial, setIsSpecial] = useState(false);
+  const [isTopRated, setIsTopRated] = useState(false);
+  const [specialTag, setSpecialTag] = useState('');
+  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
@@ -26,7 +31,16 @@ const AddMenu = ({ isOpen, onClose, onSave }) => {
       name: itemName,
       price: parseFloat(price) || 0,
       type: category || 'main',
-      image: imagePreview || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80',
+      category: category || 'main',
+      description,
+      cost: parseFloat(cost) || 0,
+      status,
+      image: imagePreview || '',
+      imageUrl: imagePreview || '',
+      file: imageFile,
+      isSpecial: category === 'special' || isSpecial,
+      isTopRated,
+      specialTag: category === 'special' ? (specialTag || "Chef's Special") : specialTag,
       actionable: true
     };
 
@@ -37,6 +51,10 @@ const AddMenu = ({ isOpen, onClose, onSave }) => {
     setPrice('');
     setCost('');
     setStatus('Active');
+    setIsSpecial(false);
+    setIsTopRated(false);
+    setSpecialTag('');
+    setImageFile(null);
     setImagePreview(null);
     onClose();
   };
@@ -77,7 +95,13 @@ const AddMenu = ({ isOpen, onClose, onSave }) => {
             </label>
             <select 
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                const selected = e.target.value;
+                setCategory(selected);
+                const special = selected === 'special';
+                setIsSpecial(special);
+                if (!special) setSpecialTag('');
+              }}
               className="w-full bg-[#0c0c0c] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-gray-300 focus:outline-none focus:border-[#F99B0C] transition-all"
             >
               <option value="">Select category</option>
@@ -86,6 +110,42 @@ const AddMenu = ({ isOpen, onClose, onSave }) => {
               <option value="special">Specials</option>
             </select>
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <input
+                type="checkbox"
+                checked={isSpecial}
+                onChange={(e) => setIsSpecial(e.target.checked)}
+                className="w-4 h-4 rounded border-white/20 accent-[#F99B0C] bg-transparent cursor-pointer"
+              />
+              Mark as special
+            </label>
+            <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <input
+                type="checkbox"
+                checked={isTopRated}
+                onChange={(e) => setIsTopRated(e.target.checked)}
+                className="w-4 h-4 rounded border-white/20 accent-[#F99B0C] bg-transparent cursor-pointer"
+              />
+              Mark as top rated
+            </label>
+          </div>
+
+          {(isSpecial || category === 'special') && (
+            <div>
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
+                Special tag
+              </label>
+              <input
+                type="text"
+                placeholder="Enter special tag (optional)"
+                value={specialTag}
+                onChange={(e) => setSpecialTag(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#F99B0C] transition-all"
+              />
+            </div>
+          )}
 
           <div>
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Description</label>
