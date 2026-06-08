@@ -3,14 +3,15 @@ import { Search, Bell } from 'lucide-react';
 
 const TopBar = ({ credentials }) => {
   const getDisplayName = () => {
-    if (credentials && credentials.email) {
+    if (credentials?.name) return credentials.name;
+    if (credentials?.email) {
       const namePart = credentials.email.split('@')[0];
       return namePart
         .split(/[._-]/)
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
     }
-    return 'Gretta Teta';
+    return 'Guest';
   };
 
   return (
