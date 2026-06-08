@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Store, ArrowLeft } from 'lucide-react';
+import { authApi } from '../../api/client';
 import signBg from '../../assets/sign.png'; 
 import logoImg from '../../assets/logo.png';
 import OwnerDashboard from '../OwnerDashboard/Ownerdashboard';
@@ -10,10 +11,8 @@ const Login = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  // Forgot Password Flow States
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [forgotStep, setForgotStep] = useState(1); // Step 1: Email, Step 2: Code, Step 3: New Password
+  const [forgotStep, setForgotStep] = useState(1); 
   
   const [forgotEmail, setForgotEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -23,45 +22,106 @@ const Login = ({ onNavigate }) => {
     email: '',
     password: ''
   });
+  const [userProfile, setUserProfile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoggedIn(true);
+    setIsSubmitting(true);
+    try {
+      const { data } = await authApi.login(loginData);
+
+      if (data.role !== role) {
+        alert(`This account is registered as a ${data.role}. Please switch to the ${data.role} portal.`);
+        return;
+      }
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
+      setUserProfile(data);
+      setIsLoggedIn(true);
+    } catch (error) {
+      const message = error.response?.data?.message || 'Login failed';
+      alert(message);
+      console.error('Login error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  const handleEmailSubmit = (e) => {
+
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    alert(`A 6-digit verification code has been dispatched to: ${forgotEmail}`);
-    setForgotStep(2); 
+    setIsSubmitting(true);
+    try {
+      const { data } = await authApi.forgotPassword({ email: forgotEmail });
+      alert(data.message);
+      setForgotStep(2);
+    } catch (error) {
+      const message = error.response?.data?.message || 'Could not send recovery code';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  const handleCodeSubmit = (e) => {
+
+  const handleCodeSubmit = async (e) => {
     e.preventDefault();
-    alert("Code verified successfully! You can now set your new password.");
-    setForgotStep(3);
+    setIsSubmitting(true);
+    try {
+      const { data } = await authApi.verifyResetCode({ email: forgotEmail, code: verificationCode });
+      alert(data.message);
+      setForgotStep(3);
+    } catch (error) {
+      const message = error.response?.data?.message || 'Invalid recovery code';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  const handlePasswordResetSubmit = (e) => {
+
+  const handlePasswordResetSubmit = async (e) => {
     e.preventDefault();
-    alert("Your password has been reset successfully. Please log in with your new credentials.");
-    setIsForgotPassword(false);
-    setForgotStep(1);
-    setForgotEmail('');
-    setVerificationCode('');
-    setNewPassword('');
+    setIsSubmitting(true);
+    try {
+      const { data } = await authApi.resetPassword({
+        email: forgotEmail,
+        code: verificationCode,
+        newPassword
+      });
+      alert(data.message);
+      setIsForgotPassword(false);
+      setForgotStep(1);
+      setForgotEmail('');
+      setVerificationCode('');
+      setNewPassword('');
+    } catch (error) {
+      const message = error.response?.data?.message || 'Password reset failed';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
+    setUserProfile(null);
     setLoginData({ email: '', password: '' });
   };
 
+  const credentials = userProfile || loginData;
+
   if (isLoggedIn) {
     if (role === 'owner') {
-      return <OwnerDashboard onLogout={handleLogout} credentials={loginData} />;
+      return <OwnerDashboard onLogout={handleLogout} credentials={credentials} />;
     }
-    return <ClientDashboard onLogout={handleLogout} credentials={loginData} />;
+    return <ClientDashboard onLogout={handleLogout} credentials={credentials} />;
   }
 
   return (
@@ -128,9 +188,10 @@ const Login = ({ onNavigate }) => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] disabled:opacity-60 text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
                   >
-                    Send Code
+                    {isSubmitting ? 'Sending...' : 'Send Code'}
                   </button>
                 </form>
               )}
@@ -150,9 +211,10 @@ const Login = ({ onNavigate }) => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] disabled:opacity-60 text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
                   >
-                    Verify Token Code
+                    {isSubmitting ? 'Verifying...' : 'Verify Token Code'}
                   </button>
                 </form>
               )}
@@ -180,9 +242,10 @@ const Login = ({ onNavigate }) => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] disabled:opacity-60 text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
                   >
-                    Update Password
+                    {isSubmitting ? 'Updating...' : 'Update Password'}
                   </button>
                 </form>
               )}
@@ -268,9 +331,10 @@ const Login = ({ onNavigate }) => {
 
                 <button
                   type="submit"
-                  className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#F99B0C] hover:bg-[#e08b0b] disabled:opacity-60 text-white font-bold py-3 rounded-xl shadow-[0_5px_20px_rgba(249,155,12,0.25)] text-sm tracking-wide transition-all pt-3.5 mt-4"
                 >
-                  Log In
+                  {isSubmitting ? 'Logging in...' : 'Log In'}
                 </button>
               </form>
 
